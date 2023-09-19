@@ -1,10 +1,9 @@
 package com.blogapp.api.controllers;
 
 import java.util.List; // Correct the import for List
-import java.util.List;
 
-import javax.validation.Valid;
-
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,7 @@ import com.blogapp.api.services.UserService;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin("*")
 public class UserController {
 
 	@Autowired

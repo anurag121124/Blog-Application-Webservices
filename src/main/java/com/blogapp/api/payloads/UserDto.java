@@ -1,31 +1,34 @@
 package com.blogapp.api.payloads;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class UserDto {
-    
+
     private int id;
-    
-    @NotBlank(message = "Name is required")
+
+   @NotEmpty
+   @Size(min = 4 , message = "User name must be minimum four charcters")
     private String name;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
+    @Email(message = "Email should be valid")
+    @NotEmpty
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters long")
+    @NotEmpty
+    @Size(min = 3, max = 10,message = "Passeword must be minimum of 3 char and maximum of 10 char")
     private String password;
 
-    @Size(max = 255, message = "About should not exceed 255 characters")
+    @NotEmpty
+    @Size(min = 10, max = 200, message
+            = "About Me must be between 10 and 200 characters")
     private String about;
 }
