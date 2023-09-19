@@ -1,13 +1,16 @@
 package com.blogapp.api.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired; // Add this import
+import java.util.List; // Correct the import for List
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import com.blogapp.api.payloads.ApiResponse;
 import com.blogapp.api.payloads.UserDto;
 import com.blogapp.api.services.UserService;
 
@@ -15,26 +18,52 @@ import com.blogapp.api.services.UserService;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService; // Declare userService as final
+	@Autowired
+	private UserService userService;
 
-    @Autowired // Inject the UserService bean
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+	// POST-create user
+	@PostMapping("/")
+	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+		UserDto createUserDto = this.userService.createUser(userDto);
+		return new ResponseEntity<>(createUserDto, HttpStatus.CREATED);
+	}
 
-    // POST - Create users
-    @PostMapping("/")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        UserDto createUserDto = this.userService.createUser(userDto);
-        return new ResponseEntity<>(createUserDto, HttpStatus.CREATED);
-    }
+	// PUT- update user
 
-    // PUT - Update users
-    // Add your update logic here
+	@PutMapping("/{userId}")
+	public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable("userId") Integer uid) {
+		UserDto updatedUser = this.userService.updateUser(userDto, uid);
+		return ResponseEntity.ok(updatedUser);
+	}
 
-    // DELETE - Delete users
-    // Add your delete logic here
+// If Delete api is not working please umcommet this code
+//	@DeleteMapping("/{userId}")
+//	public ResponseEntity<ApiResponse> deleteUser(@PathVariable("userId") Integer uid) {
+//		this.userService.deleteUser(uid);
+//		return new ResponseEntity<ApiResponse>(new ApiResponse("User deleted Successfully", true), HttpStatus.OK);
+//	}
+	// DELETE -delete user
+	@DeleteMapping("/{userId}")
+	public ResponseEntity<ApiResponse> deleteUser(@PathVariable("userId") Integer uid) {
+	    boolean deleted = this.userService.deleteUser(uid);
+	    if (deleted) {
+	        return new ResponseEntity<>(new ApiResponse("User deleted Successfully", true), HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>(new ApiResponse("User not found", false), HttpStatus.NOT_FOUND);
+	    }
+	}
 
-    // GET - Get Users
-    // Add your get logic here
+
+	// GET - user get
+	@GetMapping("/")
+	public ResponseEntity<List<UserDto>> getAllUsers() {
+		return ResponseEntity.ok(this.userService.getAllUsers());
+	}
+
+	// GET - user get
+	@GetMapping("/{userId}")
+	public ResponseEntity<UserDto> getSingleUser(@PathVariable Integer userId) {
+		return ResponseEntity.ok(this.userService.getUserById(userId));
+	}
+
 }
