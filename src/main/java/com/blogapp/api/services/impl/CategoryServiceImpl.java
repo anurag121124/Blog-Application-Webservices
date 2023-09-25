@@ -1,6 +1,7 @@
 package com.blogapp.api.services.impl;
 
 import com.blogapp.api.entities.Category;
+import com.blogapp.api.exception.ResourceNotFoundException;
 import com.blogapp.api.payloads.CategoryDto;
 import com.blogapp.api.repositories.CategoryRepo;
 import com.blogapp.api.services.CategoryService;
@@ -29,6 +30,10 @@ public class CategoryServiceImpl  implements CategoryService {
 
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto, Integer categoryId) {
+
+        Category cat = this.categoryRepo.findAllById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category","CategoryId",categoryId))
+        cat.setCategoryDescription(categoryDto);
+
 
         return null;
     }
