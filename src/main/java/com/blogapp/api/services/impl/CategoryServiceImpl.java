@@ -7,9 +7,13 @@ import com.blogapp.api.repositories.CategoryRepo;
 import com.blogapp.api.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+@Service
 public class CategoryServiceImpl  implements CategoryService {
 
 
@@ -31,25 +35,38 @@ public class CategoryServiceImpl  implements CategoryService {
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto, Integer categoryId) {
 
-        Category cat = this.categoryRepo.findAllById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category","CategoryId",categoryId))
-        cat.setCategoryDescription(categoryDto);
+        Category cat = this.categoryRepo.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category ", "Category Id", categoryId));
 
+          cat.setCategoryTitle(categoryDto.getCategoryTitle());
+          cat.setCategoryDescription(categoryDto.getCategoryDescription());
 
-        return null;
+          Category updatedcat = this.categoryRepo.save(cat);
+
+        return this.modelMapper.map(updatedcat, CategoryDto.class);
     }
+
 
     @Override
     public void deleteCategory(Integer categoryId) {
+        Category cat = this.categoryRepo.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category","Category Id",categoryId));
+        this.categoryRepo.delete(cat);
 
     }
 
     @Override
     public CategoryDto getCategory(Integer categoryId) {
-        return null;
+         Category cat = this.categoryRepo.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category","Category Id",categoryId));
+
+        return this.modelMapper.map(cat, CategoryDto.class);
     }
 
     @Override
     public List<CategoryDto> getCategories() {
-        return null;
+       List<Category> categories = this.categoryRepo.findAll();
+      List<CategoryDto> catDtos = categories.stream().map((cat) -> this.modelMapper.map(cat, CategoryDto.class))
+				.collect(Collectors.toList());       
+            
+                return catDtos;
     }
 }
