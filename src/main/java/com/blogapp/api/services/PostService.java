@@ -37,3 +37,6 @@ public interface PostService {
     List<Post> serachPosts(String keyword);
 
 }
+
+
+// user dto
