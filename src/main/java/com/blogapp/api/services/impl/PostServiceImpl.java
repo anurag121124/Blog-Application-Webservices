@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 
-
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -82,16 +81,16 @@ public class PostServiceImpl implements PostService {
         }
 
         @Override
-        public PostResponse getAllPosts(Integer pageNumber, Integer pageSize ,String sortBy,String sortDir) {
-                Sort sort  =null;
-                if(sortDir.equalsIgnoreCase("desc")){
-                    sort = Sort.by(sortBy).descending();
-                }else
-                
+        public PostResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
+                Sort sort = null;
+                if (sortDir.equalsIgnoreCase("desc")) {
+                        sort = Sort.by(sortBy).descending();
+                } else
+
                 {
-                       sort = Sort.by(sortBy).ascending();
+                        sort = Sort.by(sortBy).ascending();
                 }
-                Pageable p = PageRequest.of(pageNumber,pageSize,sort);
+                Pageable p = PageRequest.of(pageNumber, pageSize, sort);
 
                 Page<Post> pagePost = this.postRepo.findAll(p);
                 List<Post> allPosts = pagePost.getContent();
@@ -146,10 +145,10 @@ public class PostServiceImpl implements PostService {
                 return postDtos;
         }
 
-        @Override
-        public List<PostDto> serachPosts(String keyword) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException(
-                                "Unimplemented method 'serachPosts'");
-        }
+    @Override
+    public List<PostDto> searchPosts(String keyword) {
+        List<Post> posts = this.postRepo.searchByTitle("%" + keyword + "%");
+        List<PostDto> postDtos = posts.stream().map((post) -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+        return postDtos;
+    }
 }
