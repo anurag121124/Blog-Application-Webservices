@@ -33,21 +33,21 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(){
+    // @Bean
+    // public UserDetailsService userDetailsService(){
 
-        UserDetails ramesh = org.springframework.security.core.userdetails.User.builder()
-                .username("ramesh")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
-                .build();
+    //     UserDetails ramesh = org.springframework.security.core.userdetails.User.builder()
+    //             .username("ramesh")
+    //             .password(passwordEncoder().encode("password"))
+    //             .roles("USER")
+    //             .build();
 
-        UserDetails admin = org.springframework.security.core.userdetails.User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
+    //     UserDetails admin = org.springframework.security.core.userdetails.User.builder()
+    //             .username("admin")
+    //             .password(passwordEncoder().encode("admin"))
+    //             .roles("ADMIN")
+    //             .build();
 
-        return new InMemoryUserDetailsManager(ramesh, admin);
-    }
+    //     return new InMemoryUserDetailsManager(ramesh, admin);
+    // }
 }
